@@ -2,81 +2,15 @@
         let modalAberto = null;
         let timeoutFechar = null;
         
-        // Objeto com os temas dos meses
-        const temasMeses = {
-            'JANEIRO': {
-                tema: 'Tradição Um/Conceito Um',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'FEVEREIRO': {
-                tema: 'Tradição Dois/Conceito Dois',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'MARÇO': {
-                tema: 'Tradição Três/Conceito Três',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'ABRIL': {
-                tema: 'Tradição Quatro/Conceito Quatro',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'MAIO': {
-                tema: 'Tradição Cinco/Conceito Cinco',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'JUNHO': {
-                tema: 'Tradição Seis/Conceito Seis',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'JULHO': {
-                tema: 'Tradição Sete/Conceito Sete',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'AGOSTO': {
-                tema: 'Tradição Oito/Conceito Oito',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'SETEMBRO': {
-                tema: 'Tradição Nove/Conceito Nove',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'OUTUBRO': {
-                tema: 'Tradição Dez/Conceito Dez',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'NOVEMBRO': {
-                tema: 'Tradição Onze/Conceito Onze',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            },
-            'DEZEMBRO': {
-                tema: 'Tradição Doze/Conceito Doze',
-                literatura: 'LAC-B24',
-                horario: '19:30',
-                plataforma: 'MEET'
-            }
-        };
+        // Função para abrir o modal dos encontros de estudos
+        function abrirModalEncontro(numeroEncontro, tema) {
+            if (modalAberto) fecharModal(modalAberto);
+            
+            document.getElementById('titulo-encontro').textContent = numeroEncontro + ' Encontro Grupo de Estudos Al-Anon/Alateen';
+            document.getElementById('tema-encontro').textContent = tema;
+            
+            abrirModal('modal-encontro');
+        }
         
         // Função para abrir o modal do card do mês
         function abrirModalCard(elementoTitulo, nomeMes) {
@@ -87,15 +21,6 @@
             
             // Define o título do modal
             document.getElementById('titulo-mes-modal').textContent = nomeMes;
-            
-            // Define as informações do tema
-            const temaMes = temasMeses[nomeMes];
-            if (temaMes) {
-                document.getElementById('tema-mes').textContent = temaMes.tema;
-                document.getElementById('literatura-mes').textContent = temaMes.literatura;
-                document.getElementById('horario-mes').textContent = temaMes.horario;
-                document.getElementById('plataforma-mes').textContent = temaMes.plataforma;
-            }
             
             // Clona o conteúdo do cartão (exceto o título)
             const conteudoClone = cartaoMes.cloneNode(true);
