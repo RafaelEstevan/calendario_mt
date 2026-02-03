@@ -9,7 +9,20 @@
         
         // Função para abrir o modal dos encontros de estudos
         function abrirModalEncontro(numeroEncontro, tema) {
-            if (modalAberto) fecharModal(modalAberto);
+            // Limpar qualquer timeout pendente
+            if (timeoutFechar) {
+                clearTimeout(timeoutFechar);
+                timeoutFechar = null;
+            }
+            
+            // Se já houver um modal aberto, fechá-lo imediatamente
+            if (modalAberto) {
+                var modalAnterior = document.getElementById(modalAberto);
+                if (modalAnterior) {
+                    modalAnterior.classList.remove('mostrar');
+                    modalAnterior.style.display = 'none';
+                }
+            }
             
             document.getElementById('titulo-encontro').textContent = numeroEncontro + ' Encontro Grupo de Estudos Al-Anon/Alateen';
             document.getElementById('tema-encontro').textContent = tema;
@@ -19,7 +32,20 @@
         
         // Função para abrir o modal do card do mês
         function abrirModalCard(elementoTitulo, nomeMes) {
-            if (modalAberto) fecharModal(modalAberto);
+            // Limpar qualquer timeout pendente
+            if (timeoutFechar) {
+                clearTimeout(timeoutFechar);
+                timeoutFechar = null;
+            }
+            
+            // Se já houver um modal aberto, fechá-lo imediatamente
+            if (modalAberto) {
+                var modalAnterior = document.getElementById(modalAberto);
+                if (modalAnterior) {
+                    modalAnterior.classList.remove('mostrar');
+                    modalAnterior.style.display = 'none';
+                }
+            }
             
             // Encontra o cartão do mês correspondente
             const cartaoMes = elementoTitulo.closest('.cartao-mes');
@@ -44,13 +70,27 @@
             // Ajusta o estilo do cartão no modal
             conteudoClone.classList.add('cartao-mes-modal');
             
-            // Remove qualquer evento de clique do título no conteúdo clonado (se houver)
+            // Reativa os eventos de clique nos subtítulos e itens clonados
             const subtitulos = conteudoClone.querySelectorAll('.subtitulo-mes.clicavel');
             subtitulos.forEach(subtitulo => {
                 const onclickAttr = subtitulo.getAttribute('onclick');
                 if (onclickAttr) {
-                    // Mantém o evento de clique
-                    subtitulo.setAttribute('onclick', onclickAttr);
+                    subtitulo.onclick = function(e) {
+                        e.stopPropagation();
+                        eval(onclickAttr);
+                    };
+                }
+            });
+            
+            // Reativa os eventos de clique nos itens especiais clonados
+            const itensEspeciais = conteudoClone.querySelectorAll('.item-evento.especial');
+            itensEspeciais.forEach(item => {
+                const onclickAttr = item.getAttribute('onclick');
+                if (onclickAttr) {
+                    item.onclick = function(e) {
+                        e.stopPropagation();
+                        eval(onclickAttr);
+                    };
                 }
             });
             
@@ -60,7 +100,20 @@
         
         // Função para abrir o modal de aniversário com dados dinâmicos
         function abrirModalAniversario(nomeGrupo, dataFundacao, reunioes) {
-            if (modalAberto) fecharModal(modalAberto);
+            // Limpar qualquer timeout pendente
+            if (timeoutFechar) {
+                clearTimeout(timeoutFechar);
+                timeoutFechar = null;
+            }
+            
+            // Se já houver um modal aberto, fechá-lo imediatamente
+            if (modalAberto) {
+                var modalAnterior = document.getElementById(modalAberto);
+                if (modalAnterior) {
+                    modalAnterior.classList.remove('mostrar');
+                    modalAnterior.style.display = 'none';
+                }
+            }
             
             document.getElementById('titulo-aniversario').textContent = 'Aniversário do ' + nomeGrupo;
             document.getElementById('texto-aniversario').textContent = 
@@ -75,9 +128,28 @@
 
         // Função para abrir outros modais
         function abrirModal(idModal) {
-            if (modalAberto) fecharModal(modalAberto);
+            // Limpar qualquer timeout pendente
+            if (timeoutFechar) {
+                clearTimeout(timeoutFechar);
+                timeoutFechar = null;
+            }
+            
+            // Se já houver um modal aberto, fechá-lo imediatamente (sem animação)
+            if (modalAberto && modalAberto !== idModal) {
+                var modalAnterior = document.getElementById(modalAberto);
+                if (modalAnterior) {
+                    modalAnterior.classList.remove('mostrar');
+                    modalAnterior.style.display = 'none';
+                }
+            }
             
             var modal = document.getElementById(idModal);
+            if (!modal) {
+                console.error('Modal não encontrado: ' + idModal);
+                modalAberto = null;
+                return;
+            }
+            
             modal.style.display = 'block';
             modalAberto = idModal;
             
@@ -85,16 +157,16 @@
             setTimeout(function() {
                 modal.classList.add('mostrar');
             }, 10);
-            
-            // Limpar timeout anterior se existir
-            if (timeoutFechar) {
-                clearTimeout(timeoutFechar);
-                timeoutFechar = null;
-            }
         }
 
         // Função para fechar o modal
         function fecharModal(idModal) {
+            // Limpar qualquer timeout pendente primeiro
+            if (timeoutFechar) {
+                clearTimeout(timeoutFechar);
+                timeoutFechar = null;
+            }
+            
             var modal = document.getElementById(idModal);
             
             if (modal) {
@@ -104,10 +176,15 @@
                 // Esperar a animação terminar antes de esconder
                 timeoutFechar = setTimeout(function() {
                     modal.style.display = 'none';
+                    // Limpar o estado global
                     if (modalAberto === idModal) {
                         modalAberto = null;
                     }
+                    timeoutFechar = null;
                 }, 300); // Tempo da transição
+            } else {
+                // Se o modal não existe, apenas limpar o estado
+                modalAberto = null;
             }
         }
 
